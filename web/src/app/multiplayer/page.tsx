@@ -2,7 +2,8 @@
 
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from "react";
-import { Button, Table, TextInput, Title } from '@mantine/core';
+import { Button, ScrollArea, Table, TextInput, Title } from '@mantine/core';
+import LoginForm from '../components/LoginComponents/UsernameForm';
 import socket from '@/scripts/SocketConnection';
 
 interface Room {
@@ -91,7 +92,7 @@ export default function Multiplayer() {
     }, [])
 
     return (
-        <div className='flex justify-center items-center my-10'>
+        <div className='flex flex-col justify-center items-center my-10'>
             <div className="inline-flex flex-col justify-center items-center rounded-lg bg-gray-accent p-6 mt-8 min-w-96">                    
                 <div className="flex items-center justify-between w-full">
                     <Title order={3} className="pl-6">Rooms</Title>
@@ -107,22 +108,26 @@ export default function Multiplayer() {
                         />
                     </div>
                 </div>
-                <Table highlightOnHover className='w-72' >
-                    <Table.Thead>
-                        <Table.Tr>
-                            <Table.Th className="pl-0">Code</Table.Th>
-                            <Table.Th className="pl-14">Players</Table.Th>
-                            <Table.Th className="pl-14 invisible" >Players</Table.Th>  {/* Stupid hack to make the header fixed in position when the filter returns 0 results*/}
-                        </Table.Tr>
-                    </Table.Thead>
-                    <Table.Tbody className=''>{rows}</Table.Tbody>
-                </Table>
+                <ScrollArea h={250}>
+                    <Table highlightOnHover className='w-72' >
+                        <Table.Thead>
+                            <Table.Tr>
+                                <Table.Th className="pl-0">Code</Table.Th>
+                                <Table.Th className="pl-14">Players</Table.Th>
+                                <Table.Th className="pl-14 invisible" >Players</Table.Th>  {/* Stupid hack to make the header fixed in position when the filter returns 0 results*/}
+                            </Table.Tr>
+                        </Table.Thead>
+                        <Table.Tbody className=''>{rows}</Table.Tbody>
+                    </Table>
+                </ScrollArea>
                 <div className="">
                     <div className='flex flex-col p-3 mx-4'>
                         <button className ='btntext bg-[#2C2C2C] hover:bg-blue-700 text-white py-2 px-3 mx-5 my-4 rounded-lg' onClick={createRoom}>Create Room</button>
                     </div>
                 </div>
             </div>
+
+            <LoginForm></LoginForm>
         </div>
     );
 }
