@@ -5,6 +5,7 @@ export default class Player {
     place: number;
     username: string;
     host: boolean;
+    connected: boolean;
 
     constructor(username : string) {
         this.username = username;
@@ -12,6 +13,7 @@ export default class Player {
         this.WPM = 0;
         this.place = -1;
         this.host = false;
+        this.connected = true;
     }
 
     reset() {

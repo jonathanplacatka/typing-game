@@ -8,4 +8,5 @@ export interface Player {
     WPM: number;
     place: number;
     host: boolean;
+    connected: boolean;
 }

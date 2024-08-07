@@ -32,11 +32,22 @@ export default class Room {
         let playerToRemove : Player | undefined = this.#players.get(playerID);
 
         if(playerToRemove) {
-            this.#players.delete(playerID);
-
+            //if game is in progress, player is marked as disconnected but not removed
+            if(this.gameStarted) {
+                playerToRemove.connected = false;
+            } else {
+                this.#players.delete(playerID);
+            }
+        
+            //choose a new host
             if(playerToRemove.host && this.#players.size > 0) {
-                let newHost : Player = this.#players.values().next().value;
-                newHost.host = true;
+                let newHost: Player | undefined = Array.from(this.#players.values()).find(p => p !== playerToRemove);
+                
+                if(newHost) {
+                    newHost.host = true;
+                }  
+
+                playerToRemove.host = false;
             }
         }
     }
@@ -74,11 +85,21 @@ export default class Room {
         this.numWords = 0;
         this.gameStarted = false;
         this.playersFinished = 0;
-        this.#players.forEach(player => player.reset());
+
+        this.#players.forEach((player, id) => {
+            player.reset();
+            if(!player.connected) {
+                this.#players.delete(id)
+            } 
+        });
+    }
+
+    numConnected() {
+        return Array.from(this.#players.values()).filter(p => p.connected).length;
     }
 
     isEmpty() {
-        return this.#players.size === 0;
+        return this.numConnected() === 0;
     }
 
     isFull() {
@@ -86,6 +107,6 @@ export default class Room {
     }
 
     gameOver() {
-        return this.#players.size === this.playersFinished;
+        return this.numConnected() <= this.playersFinished;
     }
 }
